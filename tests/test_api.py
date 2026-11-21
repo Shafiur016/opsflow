@@ -67,6 +67,6 @@ def test_token_rejection_and_tenant_scoped_updates():
         incident = client.post('/incidents', headers=a, json={'title': 'Private issue', 'severity': 'critical'}).json()
         assert client.patch(f"/incidents/{incident['id']}", headers=b, json={'status': 'resolved'}).status_code == 404
         assert client.patch(f"/incidents/{incident['id']}", headers=a, json={'status': 'resolved'}).json()['status'] == 'resolved'
-        assert client.get('/auth/me', headers={'Authorization': '******'}).status_code == 401
+        assert client.get('/auth/me', headers={'Authorization': 'Bearer ' + 'not-a-token'}).status_code == 401
         assert client.get('/incidents').status_code == 401
         app.dependency_overrides.clear()
